@@ -2,41 +2,48 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-require("dotenv").config();
+require('dotenv').config();
+const { Server } = require('socket.io');
+const io = new Server(server);
 const { spawn } = require('child_process');
 
-const io = new Server(server);
 
-app.use(express.static(__dirname + '/public'));
-
+// define the endpoint 
+app.use(express.static(__dirname + '/client'));
 app.get('/', (req, res) => {
-	res.status(200).sendFile(__dirname + '/client.html');
+	res.status(200).sendFile(__dirname + '/client/client.html');
 });
 
 
-io.on("connection", (socket) => {
-
-	const stream = spawn('docker', ['logs', '-f', 'backend-ops']);
+io.on('connection', (socket) => {
+	console.log('user ' + socket.id + ', connected');
 	
-	stream.stdout.on('data', (data) => {
-		data.toString().split('\n').forEach((line) => {
-			console.log(line);
-			socket.emit('log', line.toString())
-		})
-	})
+	// get the container name
+	let containerName = '';
+	socket.on('containerName', (name) => {
+		containerName = name;
 
-
-	socket.on("disconnect", () => {
-		console.log("user disconnected " + socket.id)
+		// get the container logs
+		const stream = spawn('docker', ['logs', '-f', containerName]);
+		
+		// format and filter the logs
+		stream.stdout.on('data', (data) => {
+			data.toString().split('\n').forEach((line) => {
+				if (line.includes('TAPES-INFO:')) {
+					socket.emit('log', line.toString());
+				}
+			});
+		});
+	});
+	
+	// define a messgen when disconnected
+	socket.on('disconnect', () => {
+		console.log('user ' + socket.id + ', disconnected');
 	});
 
-	socket.emit('id', socket.id);
+	socket.emit('id', 'Applying your tape...');
 });
 
-
-
-
-
+// starting the server
 const PORT = process.env.PORT;
 server.listen(PORT, () => console.log(`Server has started on port: ${process.env.PORT}`));
