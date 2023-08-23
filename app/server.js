@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
 		});
 	});
 	
-	// define a messgen when disconnected
+	// define a message when disconnected
 	socket.on('disconnect', () => {
 		console.log('user ' + socket.id + ', disconnected');
 	});
