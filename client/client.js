@@ -1,14 +1,10 @@
-const endpoint = 'localhost:3000';
-const socket = io(endpoint);
+const socket = io('http://localhost:3000');
 
 // Display the status on the client side
 socket.on('id', (stream) => {
 	const socketIdElement = document.getElementById('socketId');
 	socketIdElement.textContent = 'STATUS: ' + stream;
 });
-
-// emit the container name to server
-socket.emit('containerName', 'tape1');
 
 
 // format de logs to display to the client 
