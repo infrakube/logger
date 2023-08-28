@@ -1,4 +1,9 @@
-const socket = io('http://localhost:3000');
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js"
+const socket = io('http://localhost:8080',{
+	query: {
+		container_name : "tape1"
+	}
+}); 
 
 // Display the status on the client side
 socket.on('id', (stream) => {

@@ -1,30 +1,28 @@
-require('dotenv').config();
 const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const { spawn } = require('child_process');
-
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+require('dotenv').config();
 
-const path = require('path');
-const fileJsPath = path.join(__dirname, '/client');
-const fileHtmlPath = path.join(__dirname, '/client/client.html');
-
-app.use(express.static(fileJsPath));
-
-app.get('/', (req, res) => {
-	res.status(200).sendFile(fileHtmlPath);
+const http = require('http').Server(app);
+const io = require('socket.io')(http, {
+	cors: {
+		origins: [process.env.ENDPOINT_URL],
+		methods: ['GET', 'POST'],
+		allowedHeaders: ['*'],
+		credentials: true,
+		transports: ['websocket', 'polling', 'flashsocket']
+	}
 });
+
+const { spawn } = require('child_process');
 
 
 io.on('connection', (socket) => {
 	console.log('user ' + socket.id + ', connected');
+	let tape_name = socket.handshake.query.container_name;
 	
 
 	// get the container logs
-	const stream = spawn('docker', ['logs', '-f', process.env.NAME]);
+	const stream = spawn('docker', ['logs', '-f', tape_name]);
 		
 	// format and filter the logs
 	stream.stdout.on('data', (data) => {
@@ -46,4 +44,4 @@ io.on('connection', (socket) => {
 
 // starting the server
 const PORT = process.env.PORT;
-server.listen(PORT, () => console.log(`Server has started on port: ${process.env.PORT}`));
+http.listen(PORT, () => console.log(`Server has started on port: ${process.env.PORT}`));
