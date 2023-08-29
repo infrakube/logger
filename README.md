@@ -16,8 +16,11 @@ It is possible to integrate this server with any frontend you want or need.
 ``````
 cd client
 ``````
-- Create a .env file and define the next env:
-	 PORT (or leave in blank an assume the default 3000)
+- Create a .env file:
+``````
+PORT=8080
+
+``````
 - Run the script
 ``````
 node server.js
@@ -27,10 +30,12 @@ node server.js
 ``````
 cd ../server
 ``````
-- Create a .env file and define the next env:
-	PORT (or leave in blank an assume the default 8080)
-	FILTER='your-filter' (or leave it empty string and will fetch all logs)
-	ENDPOINT_URL='http://localhost:the port of the client side' (the default is http://localhost:3000)
+- Create a .env file:
+``````
+PORT=8080 
+FILTER=''
+ENDPOINT_URL='http://localhost:3000'
+``````
 - Run the script
 ``````
 node server.js
