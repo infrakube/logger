@@ -19,18 +19,22 @@ cd client
 - Create a .env file and define the next env:
 	 PORT (or leave in blank an assume the default 3000)
 - Run the script
-	node server.js
-
+``````
+node server.js
+``````
 2º 
 - Go to the server folder
-	cd ../server
+``````
+cd ../server
+``````
 - Create a .env file and define the next env:
 	PORT (or leave in blank an assume the default 8080)
 	FILTER='your-filter' (or leave it empty string and will fetch all logs)
 	ENDPOINT_URL='http://localhost:the port of the client side' (the default is http://localhost:3000)
 - Run the script
-	<node server.js>
-
+``````
+node server.js
+``````
 3º
 - Run the container you want to fecth the logs
 - Access your localhost:3000(if use the default port)
