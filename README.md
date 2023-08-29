@@ -33,7 +33,7 @@ cd ../server
 - Create a .env file:
 ``````
 PORT=8080 
-FILTER=''
+FILTER='' (the filter you want to fetch or leave empty string to fetch all)
 ENDPOINT_URL='http://localhost:3000'
 ``````
 - Run the script
