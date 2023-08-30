@@ -1,0 +1,10 @@
+FROM node:18.13.0
+RUN apt-get update -y
+RUN apt-get install docker.io -y
+WORKDIR /app
+COPY package.json /app
+RUN npm install
+COPY server.js /app
+COPY .eslintrc.json /app/
+RUN npm run lint
+CMD node server.js

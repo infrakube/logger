@@ -10,7 +10,6 @@
 node_modules
 *.env
 information.txt
-dockerfile
 # Icon must end with two \r
 Icon
 
