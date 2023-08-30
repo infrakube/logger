@@ -14,6 +14,7 @@ const io = require('socket.io')(http, {
 });
 
 const { spawn } = require('child_process');
+const { stderr } = require('process');
 
 io.on('connection', (socket) => {
 	console.log('user ' + socket.id + ', connected');
@@ -26,17 +27,15 @@ io.on('connection', (socket) => {
 
 	// format and filter the logs
 	stream.stdout.on('data', (data) => {
-		if (process.env.FILTER === '' || process.env.FILTER === null) {
-			data.toString().split('\n').forEach((line) => {
+		data.toString().split('\n').forEach((line) => {
+			if (line.includes(process.env.FILTER)) {
 				socket.emit('log', line.toString());
-			});
-		} else {
-			data.toString().split('\n').forEach((line) => {
-				if (line.includes(process.env.FILTER)) {
-					socket.emit('log', line.toString());
-				}
-			});
-		}
+			}
+		});
+	});
+
+	stream.stderr.on('data', (data) => {
+		console.log(data.toString());
 	});
 
 	// define a message when disconnected
