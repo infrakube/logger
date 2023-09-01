@@ -91,7 +91,7 @@ docker build -f dockerfile -t server:1.0.0 .
 docker run --name server \
 			 -p 8080:8080 \
 			 -v /var/run/docker.sock:/var/run/docker.sock \
-			--network <name of the docker network> client:1.0.0 \
+			--network <name of the docker network> \
 			-e PORT=8080 \
 			-e FILTER='<the filter you want>' \
 			-e ENDPOINT_URL='http://localhost:3000' \ 
