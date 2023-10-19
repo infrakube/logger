@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
 	
 
 	// get the container logs
-	const stream = spawn('docker', ['logs', '-f', tape_name]);
+	const stream = spawn('bash', ['-c',  `while [ -z "$(docker ps | grep -w ${tape_name})" ]; do sleep 1; done; docker logs -f ${tape_name}`]);
 		
 
 	// format and filter the logs
